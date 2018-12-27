@@ -27,13 +27,13 @@ public class TracingCallFactory implements Call.Factory {
     private OkHttpClient okHttpClient;
 
     private Tracer tracer;
-    private List<OkHttpClientSpanDecorator> decorators;
+    private List<? extends OkHttpClientSpanDecorator> decorators;
 
     public TracingCallFactory(OkHttpClient okHttpClient, Tracer tracer) {
         this(okHttpClient, tracer, Collections.singletonList(OkHttpClientSpanDecorator.STANDARD_TAGS));
     }
 
-    public TracingCallFactory(OkHttpClient okHttpClient, Tracer tracer, List<OkHttpClientSpanDecorator> decorators) {
+    public TracingCallFactory(OkHttpClient okHttpClient, Tracer tracer, List<? extends OkHttpClientSpanDecorator> decorators) {
         this.okHttpClient = okHttpClient;
         this.tracer = tracer;
         this.decorators = new ArrayList<>(decorators);
@@ -84,9 +84,9 @@ public class TracingCallFactory implements Call.Factory {
     static class NetworkInterceptor implements Interceptor {
         public SpanContext parentContext;
         public Tracer tracer;
-        public List<OkHttpClientSpanDecorator> decorators;
+        public List<? extends OkHttpClientSpanDecorator> decorators;
 
-        NetworkInterceptor(Tracer tracer, SpanContext spanContext, List<OkHttpClientSpanDecorator> decorators) {
+        NetworkInterceptor(Tracer tracer, SpanContext spanContext, List<? extends OkHttpClientSpanDecorator> decorators) {
             this.parentContext = spanContext;
             this.tracer = tracer;
             this.decorators = decorators;
